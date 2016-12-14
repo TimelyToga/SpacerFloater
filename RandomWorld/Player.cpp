@@ -24,7 +24,7 @@ void Player::render(sf::RenderWindow* window, float xOffset, float yOffset)
     
     sf::Transform offset;
     offset.translate(-xOffset, -yOffset);
-    window->draw(collisionBox, offset);
+    // window->draw(collisionBox, offset);
     window->draw(*sprite, offset);
 }
 
