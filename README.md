@@ -6,4 +6,4 @@ This is a little game that I've been working on about Space Mining. It is my pro
 I am using the SFML library for basic windowing / sound / graphic support. Maybe planning to upgrade my basic viewer to direct OpenGL rendering in the future.
 
 ## Current Progres 
-![Space Picture](https://imgur.com/a/r1w0t)
+![Space Picture](https://i.imgur.com/EmZMQ1W.png)
