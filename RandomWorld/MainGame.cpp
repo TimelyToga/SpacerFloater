@@ -53,7 +53,7 @@ MainGame::MainGame(sf::ContextSettings settings, int x, int y) :
     {
         auto asteroid = new Asteroid(curX, curY, size);
         
-        // aManager.addActor(asteroid);
+        aManager.addActor(asteroid);
         cManager.addCollidable(asteroid);
         
         curX += 300;

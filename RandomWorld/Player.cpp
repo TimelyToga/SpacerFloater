@@ -24,7 +24,7 @@ void Player::render(sf::RenderWindow* window, float xOffset, float yOffset)
     
     sf::Transform offset;
     offset.translate(-xOffset, -yOffset);
-    // window->draw(collisionBox, offset);
+    window->draw(collisionBox, offset);
     window->draw(*sprite, offset);
 }
 
@@ -43,7 +43,10 @@ void Player::update(float delta)
     
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
-        powerThruster();
+        powerThruster(true);
+    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    {
+        powerThruster(false);
     }
     
     // Update physics
@@ -60,11 +63,12 @@ void Player::update(float delta)
     acceleration = sf::Vector2f(0,0);
 }
 
-void Player::powerThruster()
+void Player::powerThruster(bool forward)
 {
+    float magnitude = forward ? forwardCoef : backwardCoef;
     sf::Vector2f thrustVector = direction;
     float directionMagnitude = sqrt(pow(thrustVector.x, 2) + pow(thrustVector.y, 2));
-    thrustVector *= thrusterPower;
+    thrustVector *= thrusterPower * magnitude;
     
     force += thrustVector;    
 }

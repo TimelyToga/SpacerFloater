@@ -24,12 +24,14 @@ class Player : public Actor
     float shipMass = 10; // kg
     float thrusterPower = 110;
     float speedDecay = .993;
+    float forwardCoef = 1.0;
+    float backwardCoef = -0.5;
     
     float rotSpeed = 2;
 public:
     void render(sf::RenderWindow *window, float xOffset, float yOffset);
     void update(float delta);
-    void powerThruster();
+    void powerThruster(bool forward);
     
     // ICollidable
     bool collisionWith(ICollidable* c);
