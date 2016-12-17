@@ -10,11 +10,16 @@
 #define MainGame_hpp
 
 #include <stdio.h>
+#include <random>
 #include <SFML/Graphics.hpp>
+
 #include "Player.hpp"
 #include "AsteroidField.hpp"
 #include "ActorManager.hpp"
 #include "CollisionManager.hpp"
+#include "HUD.hpp"
+#include "GameModel.hpp"
+#include "Asteroid.hpp"
 
 class MainGame
 {
@@ -26,6 +31,9 @@ class MainGame
     AsteroidField aField;
     CollisionManager cManager;
     ActorManager aManager;
+    GameModel model;
+    HUD hud;
+    
 public:
     void init();
     void run();
@@ -35,6 +43,7 @@ private:
     
     void render();
     void simulate(float delta);
+    void processWindowEvents();
 };
 
 #endif /* MainGame_hpp */

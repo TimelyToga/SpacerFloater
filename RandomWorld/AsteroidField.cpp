@@ -10,10 +10,10 @@
 #include <tgmath.h>
 #include <iostream>
 
-AsteroidField::AsteroidField(sf::Vector2f screenSize) : Actor(0, 0)
+AsteroidField::AsteroidField(int screenX, int screenY) : Actor(0, 0)
 {
-    this->halfXScreenSize = screenSize.x / 2;
-    this->halfYScreenSize = screenSize.y / 2;
+    this->halfXScreenSize = screenX / 2;
+    this->halfYScreenSize = screenY / 2;
     
 }
 

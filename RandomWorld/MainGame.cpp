@@ -19,17 +19,18 @@
 #define SKIP_TICKS = 1000 / FPS;
 #define MAX_FRAMESKIP = 10;
 #define SHOW_ORIGIN true
-#define SHOW_OFFSET false
+#define SHOW_OFFSET true
 
 // Timing
 
 MainGame::MainGame(sf::ContextSettings settings, int x, int y) :
-    window(sf::VideoMode(x, y), "Space Miner",
-    sf::Style::Default, settings),
+    window(sf::VideoMode(x, y), "Space Miner", sf::Style::Default, settings),
     player(0, 0),
-    aField(*new sf::Vector2f(x, y)),
+    aField(x, y),
     aManager(),
-    cManager(&player)
+    cManager(&player),
+    model(),
+    hud(&model)
 {
     this->X_SCREEN_SIZE = x;
     this->Y_SCREEN_SIZE = y;
@@ -40,7 +41,7 @@ MainGame::MainGame(sf::ContextSettings settings, int x, int y) :
     // Set the Icon
     sf::Image icon;
     if (!icon.loadFromFile(resourcePath() + "icon.png")) {
-        return EXIT_FAILURE;
+        throw new Exception;
     }
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     
@@ -48,6 +49,9 @@ MainGame::MainGame(sf::ContextSettings settings, int x, int y) :
     yOffset = -Y_SCREEN_SIZE / 2;
     
     int curX = 0, curY = 0, size = 10;
+    std::uniform_int_distribution<int> dist(0, 600);
+    std::mt19937 rgen = *model.getRandGenerator();
+
     // Create some asteroids
     for(int a = 0; a < 10; a++)
     {
@@ -56,7 +60,8 @@ MainGame::MainGame(sf::ContextSettings settings, int x, int y) :
         aManager.addActor(asteroid);
         cManager.addCollidable(asteroid);
         
-        curX += 300;
+        curX += dist(rgen) + 100;
+        curY += dist(rgen) + 100;
         size += 10;
     }
     
@@ -67,6 +72,10 @@ MainGame::MainGame(sf::ContextSettings settings, int x, int y) :
     std::cout << "Hello" << std::endl;
 }
 
+void MainGame::init()
+{
+}
+
 void MainGame::run()
 {
     // Time measurement
@@ -75,39 +84,28 @@ void MainGame::run()
     
     auto prev_time = std::chrono::high_resolution_clock::now();
     auto cur_time = std::chrono::high_resolution_clock::now();
-    auto numUpdates = 0;
     
     while(window.isOpen())
     {
-        // Process events
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            // Close window: exit
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-            
-            // Escape pressed: exit
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
-                window.close();
-            }
-        }
+        processWindowEvents();
         
         // Main Game Loop
         simulate(0.1);
         render();
         
         {
-            using namespace std::chrono;
             // Timing Actions
-            cur_time = high_resolution_clock::now();
+            using namespace std::chrono;
             
+            cur_time = high_resolution_clock::now();
             auto difference = duration_cast<microseconds>(cur_time - prev_time);
             
             if(difference.count() > mSecond)
             {
-                std::cout << "UPS: " << updates << std::endl;
+                // TODO: Change UPS --> FPS
+                model.setCurFPS(updates);
+                
+                // Reset for next loop
                 prev_time = cur_time;
                 updates = 0;
             }
@@ -123,6 +121,7 @@ void MainGame::simulate(float delta)
     // Update all the things
     player.update(delta);
     cManager.update(delta);
+    hud.update(delta);
     
     // Update camera
     sf::Vector2f distanceToPlayer = sf::Vector2f(xOffset - player.getPosition().x
@@ -145,7 +144,7 @@ void MainGame::render()
     // Render Origin
     if(SHOW_ORIGIN)
     {
-        sf::CircleShape origin(5);
+        sf::CircleShape origin(200);
         origin.setPosition(0, 0);
         origin.setFillColor(sf::Color::White);
         
@@ -153,25 +152,37 @@ void MainGame::render()
         t.translate(-xOffset, -yOffset);
         window.draw(origin, t);
     }
-    
-    if(SHOW_OFFSET)
-    {
-        // Render Offset
-        sf::CircleShape offset(5);
-        offset.setPosition(X_SCREEN_SIZE / 2, Y_SCREEN_SIZE / 2);
-        offset.setFillColor(sf::Color::Yellow);
-        window.draw(offset);
-    }
+//    
+//    if(SHOW_OFFSET)
+//    {
+//        // Render Offset
+//        sf::CircleShape offset(5);
+//        offset.setPosition(X_SCREEN_SIZE / 2, Y_SCREEN_SIZE / 2);
+//        offset.setFillColor(sf::Color::Yellow);
+//        window.draw(offset);
+//    }
     
     aManager.render(&window, xOffset, yOffset);
+    hud.render(&window, xOffset, yOffset);
     
     // Show the window or something?
     window.display();
 }
 
-static const sf::ContextSettings initSettings()
+void MainGame::processWindowEvents()
 {
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
-    return settings;
+    // Process events
+    sf::Event event;
+    while (window.pollEvent(event))
+    {
+        // Close window: exit
+        if (event.type == sf::Event::Closed) {
+            window.close();
+        }
+        
+        // Escape pressed: exit
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
+            window.close();
+        }
+    }
 }

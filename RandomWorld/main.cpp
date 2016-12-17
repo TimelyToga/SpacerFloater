@@ -31,17 +31,9 @@ int main(int, char const**)
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
-    MainGame* game;
-
-    if(DEBUG)
-    {
-        game = new MainGame(settings, 1400.0, 1100.0);
-    } else
-    {
-        game = new MainGame(settings);
-    }
     
-    game->run();
+    MainGame game(settings, 1400.0, 1100.0);
+    game.run();
 
     return EXIT_SUCCESS;
 }
@@ -57,21 +49,21 @@ void helper()
     // Set the Icon
     sf::Image icon;
     if (!icon.loadFromFile(resourcePath() + "icon.png")) {
-        return EXIT_FAILURE;
+        throw new ExceptionUnknown;
     }
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     
     // Load a sprite to display
     sf::Texture texture;
     if (!texture.loadFromFile(resourcePath() + "cute_image.jpg")) {
-        return EXIT_FAILURE;
+        throw new ExceptionUnknown;
     }
     sf::Sprite sprite(texture);
     
     // Create a graphical text to display
     sf::Font font;
     if (!font.loadFromFile(resourcePath() + "sansation.ttf")) {
-        return EXIT_FAILURE;
+        throw new ExceptionUnknown;
     }
     sf::Text text("Hello SFML", font, 50);
     text.setFillColor(sf::Color::Black);
@@ -79,7 +71,7 @@ void helper()
     // Load a music to play
     sf::Music music;
     if (!music.openFromFile(resourcePath() + "nice_music.ogg")) {
-        return EXIT_FAILURE;
+        throw new ExceptionUnknown;
     }
     
     // Play the music

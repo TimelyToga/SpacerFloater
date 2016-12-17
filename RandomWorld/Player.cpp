@@ -67,7 +67,6 @@ void Player::powerThruster(bool forward)
 {
     float magnitude = forward ? forwardCoef : backwardCoef;
     sf::Vector2f thrustVector = direction;
-    float directionMagnitude = sqrt(pow(thrustVector.x, 2) + pow(thrustVector.y, 2));
     thrustVector *= thrusterPower * magnitude;
     
     force += thrustVector;    

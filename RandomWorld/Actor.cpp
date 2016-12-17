@@ -25,7 +25,7 @@ void Actor::rotate(float degrees)
     auto radians = degrees * PI / 180;
     auto newAngle = atan2(direction.y, direction.x) + radians;
     
-    auto newAngleDegrees = newAngle * 180 / PI;
+//    auto newAngleDegrees = newAngle * 180 / PI;
     
     auto newX = cos(newAngle);
     auto newY = sin(newAngle);

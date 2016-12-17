@@ -22,7 +22,7 @@ class AsteroidField : public Actor
     const int asteroidSize = 5;
     const sf::Color color = sf::Color::Magenta;
 public:
-    AsteroidField(sf::Vector2f screenSize);
+    AsteroidField(int screenX, int screenY);
     int getSpacing();
     
     // Actor methods
