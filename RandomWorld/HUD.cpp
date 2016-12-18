@@ -21,6 +21,7 @@ HUD::HUD(GameModel* model) :
     
     fps.setFont(font);
     fps.setPosition(10, 10);
+    fps.setCharacterSize(charSize);
     fps.setFillColor(sf::Color::White);
 }
 
@@ -31,5 +32,8 @@ void HUD::update(float delta)
 
 void HUD::render(sf::RenderWindow* window, float xOffset, float yOffset)
 {
+    // Update according to View
+    float zoom = window->getView().getSize().x / window->getDefaultView().getSize().x;
+    fps.setCharacterSize(zoom * charSize);
     window->draw(fps);
 }

@@ -30,10 +30,10 @@ void Player::render(sf::RenderWindow* window, float xOffset, float yOffset)
     window->draw(*sprite, offset);
     
     // Laser helper
-    sf::CircleShape lBall(5);
-    lBall.setFillColor(sf::Color::White);
-    lBall.setPosition(laserTip.x, laserTip.y);
-    window->draw(lBall, offset);
+//    sf::CircleShape lBall(5);
+//    lBall.setFillColor(sf::Color::White);
+//    lBall.setPosition(laserTip.x, laserTip.y);
+//    window->draw(lBall, offset);
 }
 
 void Player::update(float delta)
@@ -117,7 +117,7 @@ bool Player::collisionWith(ICollidable* c)
     {
         std::cout << "Radius: " << c->getRadius() << " d: " << util::distanceTo(laserTip, c->getCenter()) << std::endl;
         // Check for asteroid collision with laser
-        if(c->getRadius() >= util::distanceTo(laserTip,
+        if(c->getRadius() + laserLength >= util::distanceTo(laser.getPosition(),
                                               c->getCenter()))
         {
             c->takeDamage(laserDamage);

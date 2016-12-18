@@ -30,6 +30,8 @@ private:
     GameModel* model;
     sf::Text fps;
     sf::Font font;
+    
+    int charSize = 15;
 };
 
 #endif /* HUD_hpp */

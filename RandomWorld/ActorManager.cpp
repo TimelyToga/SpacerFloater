@@ -17,9 +17,12 @@ ActorManager::ActorManager()
 
 void ActorManager::render(sf::RenderWindow *window, float xOffset, float yOffset)
 {
-    for (int a = 0; a < actors.size(); a++)
+    for (Actor* a : actors)
     {
-        actors[a]->render(window, xOffset, yOffset);
+        if(!a->getIsDead())
+           {
+               a->render(window, xOffset, yOffset);
+           }
     }
 }
 
@@ -32,11 +35,14 @@ void ActorManager::update(float delta)
 {
     for(Actor* a : actors)
     {
-        a->update(delta);
+        if(!a->getIsDead())
+        {
+            a->update(delta);
+        }
     }
 }
 
 int ActorManager::numActors()
 {
-    return actors.size();
+    return (int) actors.size();
 }

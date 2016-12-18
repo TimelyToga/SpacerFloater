@@ -75,7 +75,6 @@ private:
     
     void resetCenter(){
         center = sf::Vector2f(position.x + radius, position.y + radius);
-        std::cout << "New Center: " << center.x << ", " << center.y << " P: " << position.x << ". " << position.y << std::endl;
     }
 };
 

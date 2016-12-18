@@ -12,8 +12,8 @@
 
 AsteroidField::AsteroidField(int screenX, int screenY) : Actor(0, 0)
 {
-    this->halfXScreenSize = screenX / 2;
-    this->halfYScreenSize = screenY / 2;
+    this->halfXScreenSize = screenX * 4;
+    this->halfYScreenSize = screenY * 4;
     
 }
 
@@ -27,10 +27,10 @@ void AsteroidField::render(sf::RenderWindow *window, float xOffset, float yOffse
     auto xPosDelta = fmod(xOffset, spacing);
     auto yPosDelta = fmod(yOffset, spacing);
     
-    auto minX = xOffset - spacing;
-    auto maxX = xOffset + (2 * halfXScreenSize + spacing);
+    auto minX = xOffset - window->getView().getSize().x;
+    auto maxX = xOffset + (window->getView().getSize().x + spacing);
     
-    auto minY = yOffset - spacing;
+    auto minY = yOffset - window->getView().getSize().x;
     auto maxY = yOffset + (2 * halfYScreenSize + spacing);
     
 //    printf("(%f, %f)->(%f, %f)\n", minX, minY, maxX, maxY);

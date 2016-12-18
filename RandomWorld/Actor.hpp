@@ -27,12 +27,14 @@ protected:
     sf::Vector2f direction;
     
     void recenterSprite();
+    bool isDead;
 public:
     Actor(int x, int y);
     Actor(int x, int y, int radius);
     
     // Base class methods
     void rotate(float degrees);
+    bool getIsDead();
 };
 
 #endif /* Actor_hpp */

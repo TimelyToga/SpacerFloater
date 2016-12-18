@@ -31,6 +31,10 @@ void Asteroid::render(sf::RenderWindow* window, float xOffset, float yOffset)
 
 void Asteroid::update(float delta)
 {
+    if(health < 0)
+    {
+        isDead = true;
+    }
     
     // Update radius to health
     setRadius(health);

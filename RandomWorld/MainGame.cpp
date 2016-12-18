@@ -31,6 +31,11 @@ MainGame::MainGame(sf::ContextSettings settings, int x, int y) :
     if (!icon.loadFromFile(resourcePath() + "icon.png")) {
         throw new Exception;
     }
+    
+    sf::View gameView(sf::FloatRect(0, 0, x, y));
+    gameView.zoom(2 );
+    window.setView(gameView);
+    
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     
     xOffset = -X_SCREEN_SIZE / 2;

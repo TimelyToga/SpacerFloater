@@ -41,3 +41,8 @@ void Actor::recenterSprite()
 {
     sprite->setPosition(*getPosition());
 }
+
+bool Actor::getIsDead()
+{
+    return isDead;
+}
