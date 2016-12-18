@@ -10,6 +10,7 @@
 #define ICollidable_h
 
 #include "SFML/Graphics.hpp"
+#include <iostream>
 
 class ICollidable
 {
@@ -24,19 +25,58 @@ public:
         return radius;
     }
     
-    sf::Vector2f getPosition()
+    void setRadius(int radius)
     {
-        return position;
+        auto deltaR = this->radius - radius;
+        this->radius = radius;
+        translate(deltaR, deltaR);
+        resetCenter();
+    }
+    
+    sf::Vector2f* getPosition()
+    {
+        return &position;
+    }
+    
+    void setPosition(sf::Vector2f position)
+    {
+        this->position = position;
+        resetCenter();
+    }
+    
+    sf::Vector2f getCenter()
+    {
+        return center;
     }
     
     void translate(sf::Vector2f translation)
     {
-        position += translation;
+        translate(translation.x, translation.y);
+    }
+    
+    void translate(float x, float y)
+    {
+        position.x += x;
+        position.y += y;
+    }
+    
+    void takeDamage(float amount){
+        health -= amount;
+        std::cout << "Health: " << health << std::endl;
     }
     
 protected:
-    int radius;
+    float health;
+private:
     sf::Vector2f position;
+    sf::Vector2f center;
+    int radius;
+
+    
+    void resetCenter(){
+        center = sf::Vector2f(position.x + radius, position.y + radius);
+        std::cout << "New Center: " << center.x << ", " << center.y << " P: " << position.x << ". " << position.y << std::endl;
+    }
 };
 
 #endif /* ICollidable_h */

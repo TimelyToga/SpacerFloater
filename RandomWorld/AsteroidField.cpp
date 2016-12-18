@@ -46,7 +46,8 @@ void AsteroidField::render(sf::RenderWindow *window, float xOffset, float yOffse
             auto m_y = y - yPosDelta;
             
             sf::CircleShape curAsteroid(asteroidSize);
-            curAsteroid.setPosition(m_x, m_y);
+            curAsteroid.setPosition(m_x - (asteroidSize / 2),
+                                    m_y - (asteroidSize / 2));
             curAsteroid.setFillColor(color);
             
             window->draw(curAsteroid, curTransform);

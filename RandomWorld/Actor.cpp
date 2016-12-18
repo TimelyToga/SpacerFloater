@@ -7,16 +7,20 @@
 //
 
 #include "Actor.hpp"
-#include "math.h"
-#include <iostream>
-
-#define PI 3.14159265
 
 Actor::Actor(int x, int y) :
     ICollidable()
 {
     direction = sf::Vector2f(0, -1);
-    position = sf::Vector2f(x, y);
+    setPosition(sf::Vector2f(x, y));
+}
+
+Actor::Actor(int x, int y, int size) :
+ICollidable()
+{
+    direction = sf::Vector2f(0, -1);
+    setRadius(size);
+    setPosition(sf::Vector2f(x, y));
 }
 
 void Actor::rotate(float degrees)
@@ -31,4 +35,9 @@ void Actor::rotate(float degrees)
     auto newY = sin(newAngle);
     
     direction = sf::Vector2f(newX, newY);
+}
+
+void Actor::recenterSprite()
+{
+    sprite->setPosition(*getPosition());
 }

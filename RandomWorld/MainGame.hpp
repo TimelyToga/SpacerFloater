@@ -20,6 +20,8 @@
 #include "HUD.hpp"
 #include "GameModel.hpp"
 #include "Asteroid.hpp"
+#include "DEFINITIONS.c"
+#include "ResourcePath.hpp"
 
 class MainGame
 {
@@ -44,6 +46,8 @@ private:
     void render();
     void simulate(float delta);
     void processWindowEvents();
+    void createSomeAsteroids(int num);
+    void debugRendering();
 };
 
 #endif /* MainGame_hpp */

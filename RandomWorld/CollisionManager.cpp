@@ -33,7 +33,7 @@ void CollisionManager::update(float delta)
         
         if(player->collisionWith(collidables[a]))
         {
-            std::cout << "IS COLLIDING" << std::endl;
+            // std::cout << "IS COLLIDING" << std::endl;
         }
     }
 }

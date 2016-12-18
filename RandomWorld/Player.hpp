@@ -19,19 +19,27 @@ class Player : public Actor
 {
     int shipWidth = 40;
     int shipHeight = 70;
+    float rotSpeed = 2;
     
-    // Thruster variables
+    // Thruster
     float shipMass = 10; // kg
     float thrusterPower = 110;
     float speedDecay = .993;
     float forwardCoef = 1.0;
     float backwardCoef = -0.5;
     
-    float rotSpeed = 2;
+    // Laser
+    float laserLength = 200;
+    float laserThickness = 3;
+    float laserDamage = 0.2;
+    sf::Vector2f laserTip;
+    const sf::Color LASER_COLOR = sf::Color(94, 212, 255);
+    sf::RectangleShape laser;
+    
 public:
     void render(sf::RenderWindow *window, float xOffset, float yOffset);
     void update(float delta);
-    void powerThruster(bool forward);
+    void powerThruster(bool forward, float power);
     
     // ICollidable
     bool collisionWith(ICollidable* c);
@@ -41,6 +49,7 @@ public:
     void alterHealth(int amount);
     int getFuel();
     int getHealth();
+    bool getLaserStatus();
     
     Player(int x, int y)
     : Actor(x, y), velocity(0, 0)
@@ -57,6 +66,12 @@ public:
         (dynamic_cast<sf::ConvexShape*> (sprite))->setPosition(x, y);
         
         (dynamic_cast<sf::ConvexShape*> (sprite))->setFillColor(sf::Color::Cyan);
+        
+        // Set up Laser
+        laser = sf::RectangleShape(sf::Vector2f(laserLength, laserThickness));
+        laser.rotate(-90);
+        laser.setPosition(x - (laserThickness / 2), y);
+        laser.setFillColor(LASER_COLOR);
     }
 private:
     sf::Vector2f force;
@@ -65,6 +80,11 @@ private:
     
     int fuel;
     int health = 100;
+    bool laserOn;
+    
+    void handleUserInput();
+    void engageLaser(bool laserOn);
+    void updateLaser(float delta);
 };
 
 #endif /* Player_hpp */

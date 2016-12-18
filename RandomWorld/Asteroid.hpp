@@ -17,18 +17,21 @@
 
 class Asteroid : public Actor
 {
-public:    
+    const sf::Color COLOR = sf::Color(78, 81, 86);
+public:
     void render(sf::RenderWindow *window, float xOffset, float yOffset);
     void update(float delta);
     
     bool collisionWith(ICollidable* c);
     
-    Asteroid(int x, int y, int size) : Actor(x, y)
+    Asteroid(int x, int y, int size) : Actor(x, y, size)
     {
         this->sprite = new sf::CircleShape(size);
-        (dynamic_cast<sf::CircleShape*>(sprite))->setFillColor(sf::Color::Green);
+        (dynamic_cast<sf::CircleShape*>(sprite))->setFillColor(COLOR);
         (dynamic_cast<sf::CircleShape*>(sprite))->setPosition(x, y);
-        this->radius = size;
+        this->health = size;
+        
+        std::cout << "H " << health << " R " << getRadius() << std::endl;
     }
 };
 

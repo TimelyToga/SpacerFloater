@@ -9,19 +9,7 @@
 #include <chrono>
 #include <iostream>
 
-// Game Headers
 #include "MainGame.hpp"
-#include "ResourcePath.hpp"
-#include "Asteroid.hpp"
-
-
-#define FPS 60
-#define SKIP_TICKS = 1000 / FPS;
-#define MAX_FRAMESKIP = 10;
-#define SHOW_ORIGIN true
-#define SHOW_OFFSET true
-
-// Timing
 
 MainGame::MainGame(sf::ContextSettings settings, int x, int y) :
     window(sf::VideoMode(x, y), "Space Miner", sf::Style::Default, settings),
@@ -48,22 +36,13 @@ MainGame::MainGame(sf::ContextSettings settings, int x, int y) :
     xOffset = -X_SCREEN_SIZE / 2;
     yOffset = -Y_SCREEN_SIZE / 2;
     
-    int curX = 0, curY = 0, size = 10;
-    std::uniform_int_distribution<int> dist(0, 600);
-    std::mt19937 rgen = *model.getRandGenerator();
-
     // Create some asteroids
-    for(int a = 0; a < 10; a++)
-    {
-        auto asteroid = new Asteroid(curX, curY, size);
-        
-        aManager.addActor(asteroid);
-        cManager.addCollidable(asteroid);
-        
-        curX += dist(rgen) + 100;
-        curY += dist(rgen) + 100;
-        size += 10;
-    }
+//    createSomeAsteroids(200);
+    auto asteroid = new Asteroid(100, 100, 100);
+    
+    aManager.addActor(asteroid);
+    cManager.addCollidable(asteroid);
+    
     
     // Set up ActorManager
     aManager.addActor(&player);
@@ -118,15 +97,16 @@ void MainGame::run()
 // Update the game state
 void MainGame::simulate(float delta)
 {
+    
     // Update all the things
-    player.update(delta);
+    aManager.update(delta);
     cManager.update(delta);
     hud.update(delta);
     
     // Update camera
-    sf::Vector2f distanceToPlayer = sf::Vector2f(xOffset - player.getPosition().x
+    sf::Vector2f distanceToPlayer = sf::Vector2f(xOffset - player.getPosition()->x
                                                 + (X_SCREEN_SIZE / 2),
-                                                 yOffset - player.getPosition().y + (Y_SCREEN_SIZE / 2));
+                                                 yOffset - player.getPosition()->y + (Y_SCREEN_SIZE / 2));
     
     auto cameraMovement = distanceToPlayer * cameraClenching;
     
@@ -141,32 +121,43 @@ void MainGame::render()
     // Clear the window before everything
     window.clear();
     
-    // Render Origin
-    if(SHOW_ORIGIN)
-    {
-        sf::CircleShape origin(200);
-        origin.setPosition(0, 0);
-        origin.setFillColor(sf::Color::White);
-        
-        sf::Transform t;
-        t.translate(-xOffset, -yOffset);
-        window.draw(origin, t);
-    }
-//    
-//    if(SHOW_OFFSET)
-//    {
-//        // Render Offset
-//        sf::CircleShape offset(5);
-//        offset.setPosition(X_SCREEN_SIZE / 2, Y_SCREEN_SIZE / 2);
-//        offset.setFillColor(sf::Color::Yellow);
-//        window.draw(offset);
-//    }
+    debugRendering();
     
     aManager.render(&window, xOffset, yOffset);
     hud.render(&window, xOffset, yOffset);
     
     // Show the window or something?
     window.display();
+}
+
+void MainGame::debugRendering()
+{
+    // Render Origin
+    if(SHOW_ORIGIN)
+    {
+        sf::Transform t;
+        t.translate(-xOffset, -yOffset);
+        
+        sf::RectangleShape vert(sf::Vector2f(60, 3));
+        vert.setFillColor(sf::Color::White);
+        vert.rotate(90);
+        vert.setPosition(0, -30);
+        window.draw(vert, t);
+        
+        sf::RectangleShape hor(sf::Vector2f(60, 3));
+        hor.setFillColor(sf::Color::White);
+        hor.setPosition(-30, 0);
+        window.draw(hor, t);
+    }
+    
+    if(SHOW_OFFSET)
+    {
+        // Render Offset
+        sf::CircleShape offset(5);
+        offset.setPosition(X_SCREEN_SIZE / 2, Y_SCREEN_SIZE / 2);
+        offset.setFillColor(sf::Color::Yellow);
+        window.draw(offset);
+    }
 }
 
 void MainGame::processWindowEvents()
@@ -184,5 +175,32 @@ void MainGame::processWindowEvents()
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
             window.close();
         }
+    }
+}
+
+void MainGame::createSomeAsteroids(int num)
+{
+    int spacing = 500;
+    int defaultMargin = 200;
+    int bounds = (sqrt(num) * (spacing + defaultMargin)) / 2;
+    
+    int maxPos = bounds, minPos = -maxPos;
+    int minSize = 50, maxSize = 200;
+    
+    std::cout << "Position bounds: " << minPos << ", " << maxPos << std::endl;
+    
+    std::uniform_int_distribution<int> posDist(minPos, maxPos);
+    std::uniform_int_distribution<int> sizeDist(minSize, maxSize);
+
+    std::mt19937 rgen = *model.getRandGenerator();
+    
+    for(int a = 0; a < num; a++)
+    {
+        auto asteroid = new Asteroid(posDist(rgen),
+                                     posDist(rgen),
+                                     sizeDist(rgen));
+        
+        aManager.addActor(asteroid);
+        cManager.addCollidable(asteroid);
     }
 }

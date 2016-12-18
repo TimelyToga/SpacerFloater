@@ -27,3 +27,16 @@ void ActorManager::addActor(Actor* a)
 {
     actors.push_back(a);
 }
+
+void ActorManager::update(float delta)
+{
+    for(Actor* a : actors)
+    {
+        a->update(delta);
+    }
+}
+
+int ActorManager::numActors()
+{
+    return actors.size();
+}

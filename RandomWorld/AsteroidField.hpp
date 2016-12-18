@@ -19,7 +19,7 @@ using namespace noise;
 class AsteroidField : public Actor
 {
     const int spacing = 600;
-    const int asteroidSize = 5;
+    const float asteroidSize = 5;
     const sf::Color color = sf::Color::Magenta;
 public:
     AsteroidField(int screenX, int screenY);

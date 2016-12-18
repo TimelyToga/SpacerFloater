@@ -7,17 +7,21 @@
 //
 
 #include "Actor.hpp"
+#include "IRenderable.h"
+#include "IUpdatable.h"
 #include <vector>
 
 #ifndef ActorManager_hpp
 #define ActorManager_hpp
 
-class ActorManager
+class ActorManager : IUpdatable
 {
 public:
     ActorManager();
     void render(sf::RenderWindow *window, float xOffset, float yOffset);
+    void update(float delta);
     void addActor(Actor* a);
+    int numActors();
 private:
     std::vector<Actor*> actors;
 };
